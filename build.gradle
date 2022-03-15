@@ -1,0 +1,87 @@
+buildscript {
+    ext.repos = {
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+        jcenter()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+    repositories repos
+}
+
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.0'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.4.0'
+    id "org.jetbrains.kotlin.kapt" version "1.4.0"
+
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+
+//    id 'com.gorylenko.gradle-git-properties' version "2.3.1"
+}
+
+group 'org.nanlan'
+version '0.0.1'
+
+repositories repos
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.security:spring-security-crypto:5.3.2.RELEASE'
+
+    implementation 'org.hibernate.validator:hibernate-validator:6.0.2.Final'
+    implementation 'com.google.guava:guava:28.2-jre'
+    implementation "com.konghq:unirest-java:3.7.00"
+    implementation 'com.alibaba:fastjson:1.2.75'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.5'
+
+    // refer to
+    // https://docs.spring.io/spring-boot/docs/2.1.3.RELEASE/reference/html/configuration-metadata.html#configuration-metadata-annotation-processor
+    // https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-kotlin.html
+    // https://kotlinlang.org/docs/reference/kapt.html
+    // https://info.michael-simons.eu/2018/07/15/spring-boots-configuration-metadata-with-kotlin/
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    // somehow this line is also needed by idea
+    kapt 'org.springframework.boot:spring-boot-configuration-processor'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: "org.junit.vintage"
+    }
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.0.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+}
+
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ['-Xjsr305=strict']
+        jvmTarget = '1.8'
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ['-Xjsr305=strict']
+        jvmTarget = '1.8'
+    }
+}
+
+// this is necessary if you want to put java source code in the kotlin directory
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+springBoot {
+    buildInfo()
+}
