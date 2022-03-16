@@ -1,5 +1,5 @@
 package com.nanlan.lixinger.pojo
 
 class ResponseFs: AbstractResponse() {
-    var data: List<PieceData> = emptyList()
+    var data: List<FsData> = emptyList()
 }

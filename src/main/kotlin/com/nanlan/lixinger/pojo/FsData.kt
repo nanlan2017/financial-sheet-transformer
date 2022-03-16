@@ -1,6 +1,6 @@
 package com.nanlan.lixinger.pojo
 
-class PieceData {
+class FsData {
     companion object {
         fun flatten(mapOfMap: Map<String, Map<String, Any>>): Map<String, Any> {
             val res = mutableMapOf<String, Any>()

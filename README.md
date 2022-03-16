@@ -1,2 +1,4 @@
 
-## 傻了，直接试用lixinger api，沒必要订购
+
+资产资本表
+https://zhuanlan.zhihu.com/p/261169133

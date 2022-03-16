@@ -2,12 +2,16 @@ package com.nanlan.lixinger
 
 import com.nanlan.lixinger.pojo.RequestFs
 import com.nanlan.lixinger.pojo.ResponseFs
+import com.nanlan.lixinger.terms.BalanceSheet
+import com.nanlan.lixinger.terms.CashFlowSheet
+import com.nanlan.lixinger.terms.Metrics
+import com.nanlan.lixinger.terms.ProfitSheet
 import com.nanlan.util.CoreJsonUtil
 import kong.unirest.Unirest
 import org.junit.jupiter.api.Test
 
 /**
- * 傻逼了，就試用就可以了啊！幹嘛直接浪費50
+ * 傻逼了，就试用就可以了
  */
 class UnirestTest {
 
@@ -23,15 +27,15 @@ class UnirestTest {
     @Test
     fun test01() {
         val reqBody = RequestFs(
-                startDate = "2019-12-31",
-                endDate = "2021-12-31",
-                stockCodes = listOf("300750"),
-                metricsList = listOf(
-                    "y.ps.toi.t",
-                    "y.ps.op.t",
-                    "q.ps.toi.t"
-                )
-            ).toJsonString()
+            startDate = "2019-12-31",
+            endDate = "2021-12-31",
+            stockCodes = listOf("300750"),
+            metricsList = listOf(
+                "y.ps.toi.t",
+                "y.ps.op.t",
+                "q.ps.toi.t"
+            )
+        ).toJsonString()
 
         val r = Unirest.post("https://open.lixinger.com/api/cn/company/fs/non_financial")
             .header("Content-Type", "application/json")
@@ -45,8 +49,27 @@ class UnirestTest {
     @Test
     fun test003() {
         val metrics = listOf(
-            "y.bs."
+            "y.${BalanceSheet.资产合计.wholeKey}.t"
         )
-        println()
+
+        val metricsTotal = listOf(
+            BalanceSheet.values().map { "y.${it.wholeKey}.t" },
+            ProfitSheet.values().map { "y.${it.wholeKey}.t" },
+            CashFlowSheet.values().map { "y.${it.wholeKey}.t" },
+            Metrics.values().map { "y.${it.wholeKey}.t" }
+        ).flatten()
+            // .take(100)
+
+        val r = Lixinger.post(
+            url = LixingerUrls.FS_DATA,
+            request = RequestFs(
+                startDate = "2019-12-31",
+                endDate = "2021-12-31",
+                stockCodes = listOf("300750"),
+                metricsList = metricsTotal
+            ),
+            responseClass = ResponseFs::class
+        )
+        println(r)
     }
 }
